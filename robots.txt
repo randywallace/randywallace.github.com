@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: 
 
-Sitemap: http://randywallace.github.io/sitemap.xml 
+Sitemap: http://blog.randywallace.com/sitemap.xml 
