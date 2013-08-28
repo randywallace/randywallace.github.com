@@ -1,16 +1,22 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>
+            http://blog.randywallace.com/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch/
+        </loc>
+        <lastmod>2013-08-28T13:10:20-04:00</lastmod>
+    </url>
+    <url>
         <loc>http://blog.randywallace.com/about/</loc>
         <lastmod>2013-08-27T22:35:18-04:00</lastmod>
     </url>
     <url>
         <loc>http://blog.randywallace.com/blog/archives/</loc>
-        <lastmod>2013-08-27T20:56:12-04:00</lastmod>
+        <lastmod>2013-08-28T13:10:20-04:00</lastmod>
     </url>
     <url>
         <loc>http://blog.randywallace.com/</loc>
-        <lastmod>2013-08-27T20:56:12-04:00</lastmod>
+        <lastmod>2013-08-28T13:10:20-04:00</lastmod>
     </url>
     <url>
         <loc>http://blog.randywallace.com/robots.txt</loc>

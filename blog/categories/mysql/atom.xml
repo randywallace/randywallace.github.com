@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
-  <link href="http://blog.randywallace.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: MySQL | My Octopress Blog]]></title>
+  <link href="http://blog.randywallace.com/blog/categories/mysql/atom.xml" rel="self"/>
   <link href="http://blog.randywallace.com/"/>
   <updated>2013-08-28T13:12:05-04:00</updated>
   <id>http://blog.randywallace.com/</id>
@@ -14,13 +14,10 @@
 
   
   <entry>
-    
     <title type="html"><![CDATA[Pulling a Large MySQL Table into elasticsearch]]></title>
     <link href="http://blog.randywallace.com/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch/"/>
-    
     <updated>2013-08-27T23:47:00-04:00</updated>
     <id>http://blog.randywallace.com/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch</id>
-    
     <content type="html"><![CDATA[<p>If you need to perform realtime queries against a huge MySQL table, but are no longer able to due to
 the size of the table, read on to find out how to make elasticsearch do the heavy lifting for you!</p>
 
@@ -48,9 +45,9 @@ is all but impossible to guarantee.</p>
 <p>Does this make sense using a one hour polling period, assuming that we want to keep the index current to within
 the last hour?</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>SELECT id AS _id, domain, ts FROM mysql_table WHERE ts &gt;= DATE_SUB(NOW(), INTERVAL 1 HOUR); </span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+SELECT id AS _id, domain, ts FROM mysql_table WHERE ts &gt;= DATE_SUB(NOW(), INTERVAL 1 HOUR);
+</code></p>
 
 <p>As long as we are telling elasticsearch that the primary key is the _id field, elasticsearch will only
 update existing entries from the last run, so no issues there.</p>
@@ -72,17 +69,16 @@ the table to add new columns for tracking.   For most production environments, t
 <p>I used a table in MySQL to track each run of new data into elasticsearch.  As you&rsquo;ll see later, I use
 this table to determine the start and stop key of each oneshot run of data.  This is the schema I used:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>CREATE TABLE `elastic_river_meta`
-</span><span class='line'>  ( `id` NOT NULL AUTO_INCREMENT,
-</span><span class='line'>    `next_index_id` bigint(20) NOT NULL,
-</span><span class='line'>    `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-</span><span class='line'>    PRIMARY KEY (`id`) );</span></code></pre></td></tr></table></div></figure>
+<p><code>``
+CREATE TABLE</code>elastic_river_meta<code>
+  (</code>id` NOT NULL AUTO_INCREMENT,</p>
 
+<pre><code>`next_index_id` bigint(20) NOT NULL,
+`timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+PRIMARY KEY (`id`) );
+</code></pre>
+
+<p>```</p>
 
 <h3>Creating the Mapping for the elasticsearch Index</h3>
 
@@ -95,70 +91,47 @@ field for keywords using the standard token analyzer (which will tokenize on the
 I want the entire domain name to be indexed as a single keyword.  Doing so requires a
 <a href="http://www.elasticsearch.org/guide/reference/mapping/multi-field-type/">Multi Field</a> type in the mapping.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>curl -XPOST http://localhost:9200/mysql_table -d '
-</span><span class='line'>{
-</span><span class='line'>  "mappings" : {
-</span><span class='line'>    "mysql_row": {
-</span><span class='line'>      "properties" : {
-</span><span class='line'>        "domain" : {
-</span><span class='line'>          "type" : "multi_field",
-</span><span class='line'>          "fields" : {
-</span><span class='line'>            "domain" : {
-</span><span class='line'>              "type" : "string",
-</span><span class='line'>              "index" : "analyzed"
-</span><span class='line'>            },
-</span><span class='line'>            "exact" : {
-</span><span class='line'>              "type" : "string",
-</span><span class='line'>              "index" : "not_analyzed"
-</span><span class='line'>            }
-</span><span class='line'>          }
-</span><span class='line'>        },
-</span><span class='line'>        "sent_date" : {
-</span><span class='line'>          "type" : "date",
-</span><span class='line'>          "format" : "dateOptionalTime"
-</span><span class='line'>        }
-</span><span class='line'>      }
-</span><span class='line'>    }
-</span><span class='line'>  }
-</span><span class='line'>}'</span></code></pre></td></tr></table></div></figure>
+<p>```
+curl -XPOST http://localhost:9200/mysql_table -d &lsquo;
+{
+  &ldquo;mappings&rdquo; : {</p>
 
+<pre><code>"mysql_row": {
+  "properties" : {
+    "domain" : {
+      "type" : "multi_field",
+      "fields" : {
+        "domain" : {
+          "type" : "string",
+          "index" : "analyzed"
+        },
+        "exact" : {
+          "type" : "string",
+          "index" : "not_analyzed"
+        }
+      }
+    },
+    "sent_date" : {
+      "type" : "date",
+      "format" : "dateOptionalTime"
+    }
+  }
+}
+</code></pre>
+
+<p>  }
+}&lsquo;
+```</p>
 
 <h3>Preloading the meta table to specify the start point and end point for the first run</h3>
 
 <p>Let&rsquo;s go ahead and put an entry in the <code>elastic_river_meta</code> table to specify the starting and ending
 point for the initial run.  This would run for a while, depending on how much data you have.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>INSERT INTO `elastic_river_meta` SET `next_index_id` = 0;
-</span><span class='line'>INSERT INTO `elastic_river_meta` SELECT MAX(id) from `mysql_table`;</span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+INSERT INTO `elastic_river_meta` SET `next_index_id` = 0;
+INSERT INTO `elastic_river_meta` SELECT MAX(id) from `mysql_table`;
+</code></p>
 
 <h3>Loading the existing data into elasticsearch</h3>
 
@@ -170,67 +143,53 @@ value of the second row you populated in the <code>elastic_river_meta</code> tab
 
 <p>This is the query we&rsquo;ll be running against MySQL:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>select id as _id, 
-</span><span class='line'>       domain, 
-</span><span class='line'>       ts 
-</span><span class='line'>from mysql_table 
-</span><span class='line'>where 
-</span><span class='line'>  id &gt; (select next_index_id 
-</span><span class='line'>        from elastic_river_meta
-</span><span class='line'>        order by id desc limit 1,1) 
-</span><span class='line'>  and 
-</span><span class='line'>  id &lt;= (select next_index_id 
-</span><span class='line'>         from elastic_river_meta 
-</span><span class='line'>         order by id desc limit 1);</span></code></pre></td></tr></table></div></figure>
+<p>```
+select id as _id,</p>
 
+<pre><code>   domain, 
+   ts 
+</code></pre>
+
+<p>from mysql_table
+where
+  id > (select next_index_id</p>
+
+<pre><code>    from elastic_river_meta
+    order by id desc limit 1,1) 
+</code></pre>
+
+<p>  and
+  id &lt;= (select next_index_id</p>
+
+<pre><code>     from elastic_river_meta 
+     order by id desc limit 1);
+</code></pre>
+
+<p>```</p>
 
 <p>And this is the command that will run it.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>/usr/bin/curl -XPUT 'localhost:9200/_river/mysql_table/_meta' -d '{
-</span><span class='line'>    "type" : "jdbc",
-</span><span class='line'>    "jdbc" : {
-</span><span class='line'>        "driver" : "com.mysql.jdbc.Driver",
-</span><span class='line'>        "url" : "jdbc:mysql://&lt;host&gt;:3306/&lt;DB&gt;",
-</span><span class='line'>        "user" : "&lt;user&gt;",
-</span><span class='line'>        "password" : "&lt;password&gt;",
-</span><span class='line'>        "strategy": "oneshot",
-</span><span class='line'>        "sql" : "select id as _id, domain, ts from mysql_table where id &gt; (select next_index_id from elastic_river_meta order by id desc limit 1,1) and id &lt;= (select next_index_id from elastic_river_meta order by id desc limit 1);"
-</span><span class='line'>    },
-</span><span class='line'>    "index" : {
-</span><span class='line'>        "index" : "mysql_table",
-</span><span class='line'>        "type" : "mysql_row",
-</span><span class='line'>        "bulk_size": 500
-</span><span class='line'>    }
-</span><span class='line'>}' </span></code></pre></td></tr></table></div></figure>
+<p>```
+/usr/bin/curl -XPUT &lsquo;localhost:9200/<em>river/mysql_table/</em>meta&rsquo; -d &lsquo;{</p>
 
+<pre><code>"type" : "jdbc",
+"jdbc" : {
+    "driver" : "com.mysql.jdbc.Driver",
+    "url" : "jdbc:mysql://&lt;host&gt;:3306/&lt;DB&gt;",
+    "user" : "&lt;user&gt;",
+    "password" : "&lt;password&gt;",
+    "strategy": "oneshot",
+    "sql" : "select id as _id, domain, ts from mysql_table where id &gt; (select next_index_id from elastic_river_meta order by id desc limit 1,1) and id &lt;= (select next_index_id from elastic_river_meta order by id desc limit 1);"
+},
+"index" : {
+    "index" : "mysql_table",
+    "type" : "mysql_row",
+    "bulk_size": 500
+}
+</code></pre>
+
+<p>}&lsquo;
+```</p>
 
 <p>Watch the log to keep an eye on when this finishes.</p>
 
@@ -245,7 +204,7 @@ value of the second row you populated in the <code>elastic_river_meta</code> tab
 </ul>
 
 
-<figure class='code'><figcaption><span> (update_index_to_latest.sh)</span> <a href='http://blog.randywallace.com/downloads/code/update_index_to_latest.sh'>download</a></figcaption>
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span> (update_index_to_latest.sh)</span> <a href='/downloads/code/update_index_to_latest.sh'>download</a></figcaption>
  <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -396,8 +355,7 @@ value of the second row you populated in the <code>elastic_river_meta</code> tab
 </span><span class='line'>delete_jdbc_river
 </span><span class='line'>update_elastic_to_latest
 </span><span class='line'>install_jdbc_river
-</span></code></pre></td></tr></table></div></figure>
-
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>You can run that script as an executable as much as you want, and
 it will always pull the latest data.</p>
@@ -407,9 +365,9 @@ it will always pull the latest data.</p>
 <p>All that is left to do now is run this script in a cronjob.  Here
 is an example that runs it every hour:</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>00 *    * * *   root    /home/user/update_index_to_latest.sh &gt; /dev/null 2&gt;&1</span></code></pre></td></tr></table></div></figure>
-
+<p><code>
+00 *    * * *   root    /home/user/update_index_to_latest.sh &gt; /dev/null 2&gt;&amp;1
+</code></p>
 
 <h2>Still missing</h2>
 
@@ -422,7 +380,6 @@ best way I see to do this is by Running a query against elasticsearch to see if 
 of this are minimal, insofar that what the query ends up returning is one row of
 the most recent id.  Regardless, I would like to add this check.</p>
 ]]></content>
-    
   </entry>
   
 </feed>
