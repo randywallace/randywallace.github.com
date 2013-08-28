@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://randywallace.github.io/sitemap.xml 
