@@ -1,0 +1,3 @@
+[submodule ".themes/whiterspace"]
+	path = .themes/whiterspace
+	url = git://github.com/mjhea0/whiterspace.git
