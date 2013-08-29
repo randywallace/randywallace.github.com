@@ -111,45 +111,12 @@ This proves useful when you&rsquo;re &hellip;">
 This proves useful when you&rsquo;re running in tmux and want a pane for tracking what is left to disconnect
 from your database before shutting it down.</p>
 
-<p>This could be done in tools like mytop, but who needs all that overhead when you have this:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#!/bin/bash                                                            
-</span><span class='line'>
-</span><span class='line'>MYSQL=/usr/bin/mysql                                     
-</span><span class='line'>DB_HOST='127.0.0.1'
-</span><span class='line'>DB_USER='user'
-</span><span class='line'>DB_PASS='pass'
-</span><span class='line'>DB='information_schema'                                                
-</span><span class='line'>                                                                       
-</span><span class='line'>read -r -d '' HOST_QUERY &lt;&lt;'EOF'                                       
-</span><span class='line'>SELECT DISTINCT SUBSTRING_INDEX(`host`, ":", 1) AS HOST                
-</span><span class='line'>FROM PROCESSLIST                                                       
-</span><span class='line'>EOF                                                                    
-</span><span class='line'>                                                                       
-</span><span class='line'>$MYSQL -u $DB_USER -p"$DB_PASS" -h $DB_HOST -N -B $DB -e "$HOST_QUERY" </span></code></pre></td></tr></table></div></figure>
-
-
-<p>Mix that up with a little watch magic, and you&rsquo;ve got realtime updates:</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>watch -n 1 ./connected_hosts.sh</span></code></pre></td></tr></table></div></figure>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/29/show-hosts-connected-to-mysql/">Read on &rarr;</a>
+    </footer>
   
 
 

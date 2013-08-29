@@ -4,7 +4,7 @@
   <title><![CDATA[My Octopress Blog]]></title>
   <link href="http://blog.randywallace.com/atom.xml" rel="self"/>
   <link href="http://blog.randywallace.com/"/>
-  <updated>2013-08-29T11:42:57-04:00</updated>
+  <updated>2013-08-29T11:45:40-04:00</updated>
   <id>http://blog.randywallace.com/</id>
   <author>
     <name><![CDATA[Randy D. Wallace Jr.]]></name>
@@ -24,6 +24,9 @@
     <content type="html"><![CDATA[<p>For the terminal jockies, this is a quick and dirty for finding who, or what, is connected to your server.
 This proves useful when you&rsquo;re running in tmux and want a pane for tracking what is left to disconnect
 from your database before shutting it down.</p>
+
+<!-- more -->
+
 
 <p>This could be done in tools like mytop, but who needs all that overhead when you have this:</p>
 
