@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>My Octopress Blog</title>
+  <title>Show Hosts Connected to MySQL - My Octopress Blog</title>
   <meta name="author" content="Randy D. Wallace Jr.">
 
   
@@ -19,7 +19,7 @@ This proves useful when you&rsquo;re &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://blog.randywallace.com">
+  <link rel="canonical" href="http://blog.randywallace.com/blog/2013/08/29/show-hosts-connected-to-mysql">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -72,18 +72,15 @@ This proves useful when you&rsquo;re &hellip;">
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
   
     
-      <h1 class="entry-title"><a href="/blog/2013/08/29/show-hosts-connected-to-mysql/">Show Hosts Connected to MySQL</a></h1>
-      
-      
+      <h1 class="entry-title">Show Hosts Connected to MySQL</h1>
+    
+  
     
       <p class="meta">
         
@@ -100,14 +97,14 @@ This proves useful when you&rsquo;re &hellip;">
 
 <time datetime="2013-08-29T10:21:00-04:00" pubdate data-updated="true">Aug 29<span>th</span>, 2013</time>
         
-         | <a href="/blog/2013/08/29/show-hosts-connected-to-mysql/#disqus_thread">Comments</a>
+         | <a href="#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>For the terminal jockies, this is a quick and dirty for finding who, or what, is connected to your server.
+<div class="entry-content"><p>For the terminal jockies, this is a quick and dirty for finding who, or what, is connected to your server.
 This proves useful when you&rsquo;re running in tmux and want a pane for tracking what is left to disconnect
 from your database before shutting it down.</p>
 
@@ -149,24 +146,16 @@ from your database before shutting it down.</p>
 </pre></td><td class='code'><pre><code class=''><span class='line'>watch -n 1 ./connected_hosts.sh</span></code></pre></td></tr></table></div></figure>
 
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
   
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch/">Pulling a Large MySQL Table Into Elasticsearch</a></h1>
+
+<span class="byline author vcard">Posted by <span class="fn">Randy D. Wallace Jr.</span></span>
+
       
-      
-    
-      <p class="meta">
-        
 
 
 
@@ -178,38 +167,42 @@ from your database before shutting it down.</p>
   
 
 
-<time datetime="2013-08-27T23:47:00-04:00" pubdate data-updated="true">Aug 27<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch/#disqus_thread">Comments</a>
-        
-      </p>
+<time datetime="2013-08-29T10:21:00-04:00" pubdate data-updated="true">Aug 29<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/mysql/'>MySQL</a>
+  
+</span>
+
+
+    </p>
     
-  </header>
+      <div class="sharing">
+  
+  
+  
+</div>
 
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch/" title="Previous Post: Pulling a Large MySQL Table into elasticsearch">&laquo; Pulling a Large MySQL Table into elasticsearch</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-  <div class="entry-content"><p>If you need to perform realtime queries against a huge MySQL table, but are no longer able to due to
-the size of the table, read on to find out how to make elasticsearch do the heavy lifting for you!</p>
-
-<p>This solution includes the ability to perform regular updates to elasticsearch of new data that gets pushed
-to the table in MySQL.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/27/pulling-a-large-mysql-table-into-elasticsearch/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -230,7 +223,7 @@ to the table in MySQL.</p>
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/randywallace">@randywallace</a> on GitHub
@@ -263,6 +256,7 @@ to the table in MySQL.</p>
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -277,7 +271,10 @@ to the table in MySQL.</p>
       var disqus_shortname = '21stcenturydevops';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://blog.randywallace.com/blog/2013/08/29/show-hosts-connected-to-mysql/';
+        var disqus_url = 'http://blog.randywallace.com/blog/2013/08/29/show-hosts-connected-to-mysql/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
